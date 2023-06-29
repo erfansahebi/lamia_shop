@@ -1,0 +1,5 @@
+grpcio==1.56.0
+grpcio-tools==1.56.0
+lamia-shared @ git+https://github.com/erfansahebi/lamia_shared.git@1e8f5ea3529096fadcd2f4107b0cafa139d240ad
+protobuf==4.23.3
+psycopg2-binary==2.9.6
