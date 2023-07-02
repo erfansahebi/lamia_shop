@@ -1,5 +1,8 @@
+import grpc
 from lamia_shared.proto.shop import shop_pb2, shop_pb2_grpc
-from common import Handler
+from .common import Handler
+from .validator import shop as shop_validator
+from marshmallow import ValidationError
 
 
 class ShopService(shop_pb2_grpc.ShopServiceServicer):
@@ -8,8 +11,21 @@ class ShopService(shop_pb2_grpc.ShopServiceServicer):
         self.handler = handler
 
     def Create(self, request, context):
-        return shop_pb2.ServerServicer()
-        pass
+
+        pend_data = shop_validator.Create(request=request)
+
+        try:
+            pend_data.validate(di=self.handler.di)
+        except ValidationError as err:
+            context.abort(grpc.StatusCode.INVALID_ARGUMENT, str(err))
+
+        return shop_pb2.CreateResponse(
+            shop=shop_pb2.ShopStruct(
+                id=str(pend_data.shop['id']),
+                user_id=str(pend_data.shop['user_id']),
+                name=pend_data.shop['name'],
+            )
+        )
 
     def Get(self, request, context):
         pass

@@ -1,4 +1,4 @@
-from lamia_shop.di.container import DIContainer
+from di.container import DIContainer
 
 
 class Handler:
