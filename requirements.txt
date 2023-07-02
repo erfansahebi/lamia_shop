@@ -1,6 +1,6 @@
 grpcio==1.56.0
 grpcio-tools==1.56.0
-lamia-shared @ git+https://github.com/erfansahebi/lamia_shared.git@698b3ee1ac6a35ed2ba1f6362ead7be15101c9b0
+lamia-shared @ git+https://github.com/erfansahebi/lamia_shared@976ee37baa5ec6ccac97f8d46f66d25d90119ae0
 marshmallow==3.19.0
 packaging==23.1
 protobuf==4.23.3
