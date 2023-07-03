@@ -1,4 +1,4 @@
-from sqlalchemy import Connection as DBConnection
+import sqlalchemy
 from svc.shop import ShopDAL
 from config.config import Config
 
@@ -19,7 +19,7 @@ class DIContainer:
         self.shop_dal = ShopDAL(db_connection=self.__get_postgres_connection())
         return
 
-    def __get_postgres_connection(self) -> DBConnection:
+    def __get_postgres_connection(self) -> sqlalchemy.Connection:
         self.__init_postgres()
 
         return self.postgres_connection
