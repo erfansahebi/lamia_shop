@@ -1,4 +1,5 @@
 import sqlalchemy
+from sqlalchemy.orm import scoped_session, sessionmaker
 from svc.shop import ShopDAL
 from config.config import Config
 
@@ -14,21 +15,36 @@ class DIContainer:
 
     def __init_shop_dal(self) -> None:
         if hasattr(self, 'shop_dal'):
-            return None
-
-        self.shop_dal = ShopDAL(db_connection=self.__get_postgres_connection())
-        return
-
-    def __get_postgres_connection(self) -> sqlalchemy.Connection:
-        self.__init_postgres()
-
-        return self.postgres_connection
-
-    def __init_postgres(self) -> None:
-        if hasattr(self, 'postgres_connection'):
             return
 
-        self.postgres_connection = sqlalchemy.create_engine(
+        self.shop_dal = ShopDAL(db_connection=self.__get_db_connection())
+        return
+
+    def __get_db_session(self):
+        self.__init_db_session()
+
+        return self.db_session
+
+    def __init_db_session(self) -> None:
+        if hasattr(self, 'db_session'):
+            return
+
+        self.db_session = scoped_session(
+            session_factory=sessionmaker(
+                bind=self.__get_db_connection(),
+            )
+        )
+
+    def __get_db_connection(self) -> sqlalchemy.Connection:
+        self.__init_db_connection()
+
+        return self.db_connection
+
+    def __init_db_connection(self) -> None:
+        if hasattr(self, 'db_connection'):
+            return
+
+        self.db_connection = sqlalchemy.create_engine(
             url=sqlalchemy.URL(
                 drivername="postgresql",
                 username=self.config.Database.Username,
