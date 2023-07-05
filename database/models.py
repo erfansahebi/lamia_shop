@@ -21,7 +21,7 @@ class Shop(Base):
     __tablename__ = 'shops'
 
     id = Column(UUID, primary_key=True)
-    user_id = Column(UUID)
+    user_id = Column(UUID, unique=True)
     name = Column(String(255))
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=datetime.now, onupdate=datetime.now)

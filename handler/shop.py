@@ -17,13 +17,14 @@ class ShopService(shop_pb2_grpc.ShopServiceServicer):
         try:
             pend_data.validate(di=self.handler.di)
         except ValidationError as err:
+            print(err)
             context.abort(grpc.StatusCode.INVALID_ARGUMENT, str(err))
 
         return shop_pb2.CreateResponse(
             shop=shop_pb2.ShopStruct(
-                id=str(pend_data.shop['id']),
-                user_id=str(pend_data.shop['user_id']),
-                name=pend_data.shop['name'],
+                id=str(pend_data.schema['id']),
+                user_id=str(pend_data.schema['user_id']),
+                name=pend_data.schema['name'],
             )
         )
 
