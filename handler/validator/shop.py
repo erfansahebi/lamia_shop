@@ -1,6 +1,6 @@
 from di.container import DIContainer
 from marshmallow import Schema, fields
-from schema.shop import ShopSchema
+from .common import RequestSchema
 
 
 class CreateSchema(Schema):
@@ -8,10 +8,7 @@ class CreateSchema(Schema):
     name = fields.Str()
 
 
-class Create:
-    def __init__(self, request: dict):
-        self.request = request
-
+class Create(RequestSchema):
     def validate(self, di: DIContainer) -> None:
         self.schema = CreateSchema().load(
             data={
@@ -23,8 +20,23 @@ class Create:
         if (di.get_shop_dal()).check_exist_by_user_id(user_id=self.schema['user_id']):
             raise Exception('shop for user exists')
 
-        ss = ShopSchema().dump(self.schema)
+        return
 
-        (di.get_shop_dal()).store(shop=ss)
+
+class GetSchema(Schema):
+    id = fields.UUID()
+
+
+class Get(RequestSchema):
+    def validate(self, di: DIContainer) -> None:
+        self.schema = GetSchema().load(
+            data={
+                'id': self.request.id,
+            },
+        )
+
+        self.fetched_shop = di.get_shop_dal().fetch(shop_id=self.schema['id'])
+        if self.fetched_shop is None:
+            raise Exception("shop doesn't exists")
 
         return
